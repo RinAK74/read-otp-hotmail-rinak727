@@ -51,9 +51,14 @@ def read_mail_otp():
         data = request.get_json()
     else:
         data = request.args
-
-    refresh_token = data.get("refresh_token")
-    client_id = data.get("client_id")
+        
+    combo = data.get("combo")  # combo là chuỗi: refresh_token|client_id
+    if combo and "|" in combo:
+        refresh_token, client_id = combo.split("|", 1)
+    else:
+        # fallback cũ
+        refresh_token = data.get("refresh_token")
+        client_id = data.get("client_id")
     max_email_raw = data.get("max_email")
     # Nếu không truyền thì mặc định là lấy 1 mail gần nhất
     max_email = int(max_email_raw) if max_email_raw and max_email_raw.isdigit() else 1
@@ -113,7 +118,7 @@ def index():
     <!DOCTYPE html>
     <html>
     <head>
-        <title>Get Mail Code</title>
+        <title>Get Code Hotmail/Outlook</title>
         <style>
             body { font-family: sans-serif; max-width: 600px; margin: 30px auto; }
             input, button { padding: 10px; width: 100%; margin: 5px 0; font-size: 16px; }
@@ -122,29 +127,23 @@ def index():
     </head>
     <body>
         <h2>🔐 Lấy mã OTP từ email (Hotmail/Outlook)</h2>
-        <input type="text" id="refresh_token" placeholder="Refresh Token">
-        <input type="text" id="client_id" placeholder="Client ID">
+        <h2>Thông tin liên hệ telegram: @RinAK727</h2>
+        <input type="text" id="combo" placeholder="NHẬP: RefreshToken|ClientID">
         <input type="text" id="keyword" placeholder="Lọc từ khoá (ví dụ: facebook, twitter - có thể để trống)">
-        <input type="number" id="time_window" placeholder="Thời gian lọc (phút, để trống mặc định là 5 phút)">
-        <input type="number" id="max_email" placeholder="Số lượng mail tối đa (để trống mặc định là 1 email)">
+        <input type="number" id="time_window" placeholder="Thời gian lọc (phút, Nếu để trống mặc định là 5 phút)">
+        <input type="number" id="max_email" placeholder="Số lượng mail tối đa (Nếu để trống mặc định là 1 email)">
         <button onclick="getCode()">Get Code</button>
         <pre id="output">👉 Nhập thông tin rồi nhấn nút Get Code...</pre>
 
         <script>
             async function getCode() {
-                const token = document.getElementById("refresh_token").value;
-                const clientId = document.getElementById("client_id").value;
                 const keyword = document.getElementById("keyword").value;
                 const timeWindow = document.getElementById("time_window").value;
                 const maxEmail = document.getElementById("max_email").value;
+                const combo = document.getElementById("combo").value;
 
-                const params = new URLSearchParams({
-                    refresh_token: token,
-                    client_id: clientId,
-                    keyword: keyword,
-                    time_window: timeWindow,
-                    max_email: maxEmail
-                });
+                const params = new URLSearchParams({ combo, keyword, time_window: timeWindow, max_email: maxEmail });
+
 
                 document.getElementById("output").innerText = "⏳ Đang xử lý...";
 
