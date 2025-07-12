@@ -124,9 +124,9 @@ def index():
         <h2>🔐 Lấy mã OTP từ email (Hotmail/Outlook)</h2>
         <input type="text" id="refresh_token" placeholder="Refresh Token">
         <input type="text" id="client_id" placeholder="Client ID">
-        <input type="text" id="keyword" placeholder="Từ khoá (ví dụ: facebook)">
-        <input type="number" id="time_window" placeholder="Thời gian lọc (phút, ví dụ: 10)">
-        <input type="number" id="max_email" placeholder="Số lượng mail tối đa (ví dụ: 10)">
+        <input type="text" id="keyword" placeholder="Lọc từ khoá (ví dụ: facebook, twitter - có thể để trống)">
+        <input type="number" id="time_window" placeholder="Thời gian lọc (phút, để trống mặc định là 5 phút)">
+        <input type="number" id="max_email" placeholder="Số lượng mail tối đa (để trống mặc định là 1 email)">
         <button onclick="getCode()">Get Code</button>
         <pre id="output">👉 Nhập thông tin rồi nhấn nút Get Code...</pre>
 
